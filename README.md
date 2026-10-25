@@ -132,7 +132,9 @@ Last updated: 25 Oct 2026. Each phase ends with something you can demo. A task i
 - **Python dependencies installed** into `.venv`. Yesterday's `psycopg[binary]` failure didn't recur. It looked like a network problem: the first attempt couldn't see any versions on PyPI.
 - **Smoke test:** `GET /schema` returns the 13-field schema. `GET /health` responds and reports each service as unreachable until the compose stack runs. The worker imports and registers `process_agreement`.
 - **Qdrant image bumped to 1.20.0** to match the installed `qdrant-client` 1.20, which warns when the two are more than one minor version apart. `qdrant-client` is now pinned to `~=1.20.0` so they stay in step.
-- **Git repository** created with a first commit; `.gitattributes` keeps line endings as LF, since the code runs in Linux containers.
+- **Git repository** created with a first commit; `.gitattributes` keeps line endings as LF, since the code runs in Linux containers. Pushed to https://github.com/sauravtiwari/Agreement-Intelligence.
+- **Postgres moved to host port 5433**, because a local Postgres on the dev machine already uses 5432. Inside the compose network the services still talk to `postgres:5432`.
+- **Docker Desktop installed** but can't start yet: it needs WSL 2, which isn't installed.
 
 **Decisions**
 
@@ -142,7 +144,7 @@ Last updated: 25 Oct 2026. Each phase ends with something you can demo. A task i
 
 **Blocked / remaining**
 
-- The compose stack hasn't been started (Docker Desktop is needed on the dev machine).
+- The compose stack hasn't been started: Docker Desktop needs WSL 2 (`wsl --install` in an admin terminal, then restart).
 - Databricks workspace not created; golden set not picked.
 
 ### Phase 1 — Databricks bronze and silver parsing (weeks 2–3) · Not started
