@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16.6-alpine
+    environment:
+      POSTGRES_USER: agreements
+      POSTGRES_PASSWORD: agreements
+      POSTGRES_DB: agreements
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agreements"]
+      interval: 5s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:v1.20.0  # keep in step with qdrant-client in api/requirements.txt
+    ports: ["6333:6333", "6334:6334"]
+    volumes: [qdrant:/qdrant/storage]
+
+  redis:
+    image: redis:7.4-alpine
+    ports: ["6379:6379"]
+
+  api:
+    build: { context: ., dockerfile: api/Dockerfile }
+    environment:
+      DATABASE_URL: postgresql://agreements:agreements@postgres:5432/agreements
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_URL: http://qdrant:6333
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+      qdrant: { condition: service_started }
+
+  worker:
+    build: { context: ., dockerfile: worker/Dockerfile }
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://agreements:agreements@postgres:5432/agreements
+      QDRANT_URL: http://qdrant:6333
+    depends_on: [redis, postgres, qdrant]
+
+volumes:
+  pgdata:
+  qdrant:
