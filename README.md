@@ -112,7 +112,7 @@ Last updated: 25 Oct 2026. Each phase ends with something you can demo. A task i
 - [x] Pydantic `Agreement` schema, each field with source quote + page
 - [x] Validation rules (brought forward from Phase 2)
 - [x] Install Python dependencies and pass `pytest contract_core` (4 tests pass)
-- [ ] `git init` and first commit
+- [x] `git init` and first commit
 
 **Work done (24 Oct 2026)**
 
@@ -132,6 +132,7 @@ Last updated: 25 Oct 2026. Each phase ends with something you can demo. A task i
 - **Python dependencies installed** into `.venv`. Yesterday's `psycopg[binary]` failure didn't recur. It looked like a network problem: the first attempt couldn't see any versions on PyPI.
 - **Smoke test:** `GET /schema` returns the 13-field schema. `GET /health` responds and reports each service as unreachable until the compose stack runs. The worker imports and registers `process_agreement`.
 - **Qdrant image bumped to 1.20.0** to match the installed `qdrant-client` 1.20, which warns when the two are more than one minor version apart. `qdrant-client` is now pinned to `~=1.20.0` so they stay in step.
+- **Git repository** created with a first commit; `.gitattributes` keeps line endings as LF, since the code runs in Linux containers.
 
 **Decisions**
 
@@ -143,7 +144,6 @@ Last updated: 25 Oct 2026. Each phase ends with something you can demo. A task i
 
 - The compose stack hasn't been started (Docker Desktop is needed on the dev machine).
 - Databricks workspace not created; golden set not picked.
-- Not a git repository yet.
 
 ### Phase 1 — Databricks bronze and silver parsing (weeks 2–3) · Not started
 
